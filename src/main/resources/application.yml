@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/pkolkiew/config-server-data-v1.git
+
+server:
+  port: 9090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      showDetails: ALWAYS
+  server:
+    port: 9091
+  info:
+    git:
+      mode: full
+
+eureka:
+  instance:
+    preferIpAddress: true
+    leaseRenewalIntervalInSeconds: 10
+    healthCheckUrlPath: /actuator/health
+    metadataMap:
+      startup: ${random.int}
+  client:
+    registryFetchIntervalSeconds: 10
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+---
+
+spring:
+  profiles: test-docker-compose
+  cloud:
+    inetutils:
+      preferredNetworks:
+        - 10.0.10
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
